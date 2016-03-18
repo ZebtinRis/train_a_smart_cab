@@ -46,10 +46,10 @@ class Simulator(object):
         self.font = pygame.font.Font(None, 28)
         self.paused = False
 
-    def run(self, n_trials=1):
+    def run(self, n_trials=1, render=True):
         self.quit = False
         for trial in xrange(n_trials):
-            print "Simulator.run(): Trial {}".format(trial)  # [debug]
+            #print "Simulator.run(): Trial {}".format(trial)  # [debug]
             self.env.reset()
             self.current_time = 0.0
             self.last_updated = 0.0
@@ -77,8 +77,9 @@ class Simulator(object):
                         self.last_updated = self.current_time
 
                     # Render and sleep
-                    self.render()
-                    pygame.time.wait(self.frame_delay)
+                    if render:
+                        self.render()
+                        pygame.time.wait(self.frame_delay)
                 except KeyboardInterrupt:
                     self.quit = True
                 finally:

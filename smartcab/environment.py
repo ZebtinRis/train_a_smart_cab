@@ -90,7 +90,7 @@ class Environment(object):
 
         start_heading = random.choice(self.valid_headings)
         deadline = self.compute_dist(start, destination) * 5
-        print "Environment.reset(): Trial set up with start = {}, destination = {}, deadline = {}".format(start, destination, deadline)
+        #print "Environment.reset(): Trial set up with start = {}, destination = {}, deadline = {}".format(start, destination, deadline)
 
         # Initialize agent(s)
         for agent in self.agent_states.iterkeys():
@@ -116,7 +116,7 @@ class Environment(object):
         if self.primary_agent is not None:
             if self.enforce_deadline and self.agent_states[self.primary_agent]['deadline'] <= 0:
                 self.done = True
-                print "Environment.reset(): Primary agent could not reach destination within deadline!"
+                #print("Environment.reset(): Primary agent could not reach destination within deadline!")
             self.agent_states[self.primary_agent]['deadline'] -= 1
 
     def sense(self, agent):
@@ -180,7 +180,16 @@ class Environment(object):
                 #if self.bounds[0] <= location[0] <= self.bounds[2] and self.bounds[1] <= location[1] <= self.bounds[3]:  # bounded
                 state['location'] = location
                 state['heading'] = heading
-                reward = 2 if action == agent.get_next_waypoint() else 0.5
+
+                next_waypoint = agent.get_next_waypoint()
+
+                #if agent is self.primary_agent:
+                #    print("NWP: {} A:{}".format(next_waypoint, action))
+
+                if action == next_waypoint:
+                    reward = 2
+                else:
+                    reward = 0.5
             else:
                 reward = -1
         else:
@@ -191,7 +200,7 @@ class Environment(object):
                 if state['deadline'] >= 0:
                     reward += 10  # bonus
                 self.done = True
-                print "Environment.act(): Primary agent has reached destination!"  # [debug]
+                #print ("Environment.act(): Primary agent has reached destination!")  # [debug]
             self.status_text = "state: {}\naction: {}\nreward: {}".format(agent.get_state(), action, reward)
             #print "Environment.act() [POST]: location: {}, heading: {}, action: {}, reward: {}".format(location, heading, action, reward)  # [debug]
 
